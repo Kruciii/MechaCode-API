@@ -1,0 +1,96 @@
+﻿version: '3.8'
+
+services:
+  # ==========================================
+  # 1. TWOJA BAZA DANYCH (Dla .NET API)
+  # ==========================================
+  app-db:
+    image: postgres:15-alpine
+    container_name: app_postgres
+    ports:
+      - "5432:5432" # Dostępna na localhost:5432
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=AppDb
+    volumes:
+      - app_postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  # ==========================================
+  # 2. JUDGE0 (Silnik sprawdzający)
+  # ==========================================
+  judge0-server:
+    image: judge0/judge0:1.13.1
+    container_name: judge0_server
+    ports:
+      - "2358:2358" # API Judge0 dostępne na localhost:2358
+    environment:
+      - JUDGE0_HOMEPAGE_TITLE=Judge0
+      - REDIS_HOST=judge0-redis
+      - REDIS_PASSWORD=
+      - POSTGRES_USER=judge0
+      - POSTGRES_PASSWORD=judge0
+      - POSTGRES_DB=judge0
+      - POSTGRES_HOST=judge0-db
+    depends_on:
+      - judge0-db
+      - judge0-redis
+    networks:
+      - app-network
+
+  judge0-worker:
+    image: judge0/judge0:1.13.1
+    container_name: judge0_worker
+    command: ["./scripts/workers_run.sh"]
+    privileged: true # Wymagane do izolacji procesów
+    environment:
+      - REDIS_HOST=judge0-redis
+      - REDIS_PASSWORD=
+      - POSTGRES_USER=judge0
+      - POSTGRES_PASSWORD=judge0
+      - POSTGRES_DB=judge0
+      - POSTGRES_HOST=judge0-db
+    depends_on:
+      - judge0-db
+      - judge0-redis
+    networks:
+      - app-network
+
+  # Baza danych wymagana przez Judge0 (wewnętrzna)
+  judge0-db:
+    image: postgres:15-alpine
+    container_name: judge0_postgres
+    environment:
+      - POSTGRES_USER=judge0
+      - POSTGRES_PASSWORD=judge0
+      - POSTGRES_DB=judge0
+    volumes:
+      - judge0_postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  # Kolejka Redis (wspólna dla Judge0 i ewentualnie Twojego API)
+  judge0-redis:
+    image: redis:7-alpine
+    container_name: judge0_redis
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379" # Dostępny na localhost:6379
+    volumes:
+      - judge0_redis_data:/data
+    networks:
+      - app-network
+
+# ==========================================
+# WOLUMENY I SIECI
+# ==========================================
+volumes:
+  app_postgres_data:
+  judge0_postgres_data:
+  judge0_redis_data:
+
+networks:
+  app-network:
+    driver: bridge
