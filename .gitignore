@@ -29,3 +29,7 @@ docker/db_data/
 # --- VS Code ---
 .vscode/
 *.code-workspace
+# --- Database Folders (Bind Mounts) ---
+app_postgres_data/
+judge0_postgres_data/
+judge0_redis_data/
