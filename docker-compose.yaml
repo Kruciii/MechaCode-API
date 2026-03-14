@@ -1,14 +1,12 @@
-﻿version: '3.8'
-
-services:
+﻿services:
   # ==========================================
-  # 1. TWOJA BAZA DANYCH (Dla .NET API)
+  # 1. BAZA DANYCH APLIKACJI
   # ==========================================
   app-db:
     image: postgres:15-alpine
     container_name: app_postgres
     ports:
-      - "5432:5432" # Dostępna na localhost:5432
+      - "5432:5432"
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
@@ -25,15 +23,16 @@ services:
     image: judge0/judge0:1.13.1
     container_name: judge0_server
     ports:
-      - "2358:2358" # API Judge0 dostępne na localhost:2358
+      - "2358:2358"
     environment:
       - JUDGE0_HOMEPAGE_TITLE=Judge0
       - REDIS_HOST=judge0-redis
-      - REDIS_PASSWORD=
+      - REDIS_PASSWORD=judge0-redis
       - POSTGRES_USER=judge0
       - POSTGRES_PASSWORD=judge0
       - POSTGRES_DB=judge0
       - POSTGRES_HOST=judge0-db
+      - JUDGE0_ALLOW_UNSAFE=true
     depends_on:
       - judge0-db
       - judge0-redis
@@ -44,21 +43,21 @@ services:
     image: judge0/judge0:1.13.1
     container_name: judge0_worker
     command: ["./scripts/workers_run.sh"]
-    privileged: true # Wymagane do izolacji procesów
+    privileged: true
     environment:
       - REDIS_HOST=judge0-redis
-      - REDIS_PASSWORD=
+      - REDIS_PASSWORD=judge0-redis
       - POSTGRES_USER=judge0
       - POSTGRES_PASSWORD=judge0
       - POSTGRES_DB=judge0
       - POSTGRES_HOST=judge0-db
+      - JUDGE0_ALLOW_UNSAFE=true
     depends_on:
       - judge0-db
       - judge0-redis
     networks:
       - app-network
 
-  # Baza danych wymagana przez Judge0 (wewnętrzna)
   judge0-db:
     image: postgres:15-alpine
     container_name: judge0_postgres
@@ -71,15 +70,51 @@ services:
     networks:
       - app-network
 
-  # Kolejka Redis (wspólna dla Judge0 i ewentualnie Twojego API)
   judge0-redis:
     image: redis:7-alpine
     container_name: judge0_redis
-    command: redis-server --appendonly yes
+    command: redis-server --appendonly yes --requirepass judge0-redis
     ports:
-      - "6379:6379" # Dostępny na localhost:6379
+      - "6379:6379"
     volumes:
       - judge0_redis_data:/data
+    networks:
+      - app-network
+
+  # ==========================================
+  # 3. TWOJE API (FastAPI) - Poprawione wcięcie
+  # ==========================================
+  backend:
+    build: ./backend
+    container_name: fastapi_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - DATABASE_URL=postgresql://admin:admin@app-db:5432/AppDb
+      - JUDGE0_URL=http://judge0-server:2358
+    depends_on:
+      - app-db
+      - judge0-server
+    networks:
+      - app-network
+
+  # ==========================================
+  # 4. TWÓJ FRONTEND (React + Vite) - Poprawione wcięcie
+  # ==========================================
+  frontend:
+    build: ./frontend
+    container_name: react_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - backend
     networks:
       - app-network
 
