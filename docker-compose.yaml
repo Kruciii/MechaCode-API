@@ -20,19 +20,25 @@
   # 2. JUDGE0 (Silnik sprawdzający)
   # ==========================================
   judge0-server:
-    image: judge0/judge0:1.13.1
+    privileged: true
+    image: mrkushalsm/judge0:latest # Zmiana wersji na nowszą/stabilniejszą
     container_name: judge0_server
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
     ports:
       - "2358:2358"
     environment:
-      - JUDGE0_HOMEPAGE_TITLE=Judge0
+      - JUDGE0_HOMEPAGE_TITLE=MechaCode_Judge
       - REDIS_HOST=judge0-redis
       - REDIS_PASSWORD=judge0-redis
       - POSTGRES_USER=judge0
       - POSTGRES_PASSWORD=judge0
       - POSTGRES_DB=judge0
       - POSTGRES_HOST=judge0-db
+      # Te trzy flagi to "święta trójca" dla Windowsa:
       - JUDGE0_ALLOW_UNSAFE=true
+      - JUDGE0_RUN_PROC_WITHOUT_ISOLATE=true
+      - JUDGE0_MAX_QUEUE_SIZE=100
     depends_on:
       - judge0-db
       - judge0-redis
@@ -40,10 +46,12 @@
       - app-network
 
   judge0-worker:
-    image: judge0/judge0:1.13.1
-    container_name: judge0_worker
-    command: ["./scripts/workers_run.sh"]
     privileged: true
+    image: mrkushalsm/judge0:latest # Zmiana wersji
+    container_name: judge0_worker
+    command: ["./scripts/workers"]
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
     environment:
       - REDIS_HOST=judge0-redis
       - REDIS_PASSWORD=judge0-redis
@@ -52,11 +60,14 @@
       - POSTGRES_DB=judge0
       - POSTGRES_HOST=judge0-db
       - JUDGE0_ALLOW_UNSAFE=true
+      - JUDGE0_RUN_PROC_WITHOUT_ISOLATE=true
     depends_on:
       - judge0-db
       - judge0-redis
     networks:
       - app-network
+    restart: always
+
 
   judge0-db:
     image: postgres:15-alpine

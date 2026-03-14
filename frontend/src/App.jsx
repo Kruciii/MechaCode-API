@@ -1,54 +1,36 @@
-import React, { useState } from 'react';
-import Editor from '@monaco-editor/react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import TaskList from './TaskList';
+import TaskEditor from './TaskEditor';
 
 function App() {
-  const [code, setCode] = useState('// Napisz swój kod tutaj\nconsole.log("Hello MechaCode!");');
-  const [output, setOutput] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  const runCode = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch('http://localhost:8000/test-run', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      });
-      const data = await response.json();
-      
-      // Wyświetlamy wynik z Judge0
-      setOutput(data.stdout || data.message || "Brak wyjścia (Output)");
-    } catch (err) {
-      setOutput("Błąd połączenia z API");
-    }
-    setLoading(false);
-  };
-
   return (
-    <div style={{ padding: '20px', background: '#1e1e1e', color: '#fff', minHeight: '100vh' }}>
-      <h1>🤖 MechaCode Editor</h1>
-      <div style={{ display: 'flex', gap: '20px' }}>
-        <div style={{ flex: 1, border: '1px solid #444' }}>
-          <Editor
-            height="60vh"
-            defaultLanguage="javascript"
-            theme="vs-dark"
-            value={code}
-            onChange={(value) => setCode(value)}
-          />
-          <button 
-            onClick={runCode} 
-            disabled={loading}
-            style={{ width: '100%', padding: '15px', background: '#007acc', color: 'white', border: 'none', cursor: 'pointer' }}
-          >
-            {loading ? 'Uruchamianie...' : '🚀 URUCHOM KOD'}
-          </button>
-        </div>
-        <div style={{ flex: 1, background: '#000', padding: '20px', borderRadius: '5px' }}>
-          <h3>Output:</h3>
-          <pre style={{ color: '#00ff00' }}>{output}</pre>
-        </div>
+    <Router>
+      <div style={{ 
+        background: '#121212', // Ciemne tło dla całej apki
+        minHeight: '100vh', 
+        width: '100vw',
+        margin: 0,
+        padding: 0
+      }}>
+        <Routes>
+          {/* Strona główna: Lista wszystkich zadań (Strona 3) */}
+          <Route path="/" element={<TaskList />} />
+
+          {/* Strona zadania: Edytor z instrukcją (Strona 4) */}
+          {/* Parametr :id pozwala TaskEditorowi wiedzieć, które zadanie pobrać z bazy */}
+          <Route path="/task/:id" element={<TaskEditor />} />
+          
+          {/* Opcjonalnie: Obsługa nieistniejących stron */}
+          <Route path="*" element={
+            <div style={{ color: 'white', padding: '20px' }}>
+              <h2>404 - System MechaCode nie odnalazł tej lokalizacji.</h2>
+              <button onClick={() => window.location.href = '/'}>Wróć do bazy</button>
+            </div>
+          } />
+        </Routes>
       </div>
-    </div>
+    </Router>
   );
 }
 
