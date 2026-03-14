@@ -6,4 +6,4 @@ Jak to odpalić?
 5) Wchodzisz i sprawdzasz czy działa : 
 Aplikacja Webowa: http://localhost:5173
 Dokumentacja API (Swagger): http://localhost:8000/docs
-Sędzia (Judge0): http://localhost:2358 
+Sędzia (Judge0): http://localhost:2358/docs
