@@ -7,9 +7,35 @@ const STATUS_COLORS = {
     NOT_STARTED: '#ff4757'   // Krwista czerwień
 };
 
+interface Task {
+    id: number;
+    title: string;
+    status: keyof typeof STATUS_COLORS;
+    short_content: string;
+    topic: string;
+    difficulty: string;
+    semester: string;
+}
+
+interface Progress {
+    subject_name: string;
+    percentage: number;
+}
+
+interface Data {
+    tasks: Task[];
+    progress: Progress;
+}
+
+interface TagProps {
+    text: string;
+    color: string;
+    textColor?: string;
+}
+
 function TaskList() {
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [data, setData] = useState<Data | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -26,6 +52,9 @@ function TaskList() {
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: '#00ff88', fontFamily: 'monospace' }}>
             <h2> INICJALIZACJA SYSTEMU...</h2>
         </div>
+    );
+    if (!data) return (
+        <div style={{ color: '#e74c3c', padding: '20px' }}>Błąd ładowania danych.</div>
     );
 
     return (
@@ -84,7 +113,7 @@ function TaskList() {
                 gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', 
                 gap: '25px' 
             }}>
-                {data.tasks.map(task => (
+                {data.tasks.map((task: Task) => (
                     <div 
                         key={task.id} 
                         onClick={() => navigate(`/task/${task.id}`)}
@@ -152,7 +181,7 @@ function TaskList() {
 }
 
 // Pomocniczy komponent dla tagów
-const Tag = ({ text, color, textColor = '#bdc3c7' }) => (
+const Tag: React.FC<TagProps> = ({ text, color, textColor = '#bdc3c7' }) => (
     <span style={{ 
         backgroundColor: color, 
         color: textColor,

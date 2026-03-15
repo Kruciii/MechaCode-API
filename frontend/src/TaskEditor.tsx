@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Editor from '@monaco-editor/react';
+import { Editor } from '@monaco-editor/react';
 
 function TaskEditor() {
-  const { id } = useParams(); // Wyciągamy ID z adresu URL (np. /task/1)
+  const { id } = useParams<{ id: string }>(); // Wyciągamy ID z adresu URL (np. /task/1)
   const navigate = useNavigate();
   
   // Stany aplikacji
-  const [task, setTask] = useState(null); // Tu trzymamy pobrane szczegóły zadania
-  const [code, setCode] = useState(''); // Kod w edytorze
-  const [output, setOutput] = useState(''); // Wynik z terminala
-  const [loadingSubmit, setLoadingSubmit] = useState(false); // Ładowanie przy wysyłaniu
-  const [fetchingTask, setFetchingTask] = useState(true); // Ładowanie przy pobieraniu z API
+  const [task, setTask] = useState<any>(null); // Tu trzymamy pobrane szczegóły zadania
+  const [code, setCode] = useState<string>(''); // Kod w edytorze
+  const [output, setOutput] = useState<string>(''); // Wynik z terminala
+  const [loadingSubmit, setLoadingSubmit] = useState<boolean>(false); // Ładowanie przy wysyłaniu
+  const [fetchingTask, setFetchingTask] = useState<boolean>(true); // Ładowanie przy pobraniu z API
 
   // --- 1. POBIERANIE ZADANIA Z API ---
   useEffect(() => {
@@ -93,7 +93,7 @@ function TaskEditor() {
               defaultLanguage={task.language || "cpp"}
               theme="vs-dark"
               value={code}
-              onChange={(value) => setCode(value)}
+              onChange={(value: string | undefined) => setCode(value || "")}
             />
           </div>
           
