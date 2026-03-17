@@ -1,44 +1,151 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Editor } from "@monaco-editor/react";
 import { Button } from "@/components/ui/button";
+import { Terminal, Code2, BookOpen } from "lucide-react";
 
-export interface TaskEditorProps {
-  // Define props as needed, e.g.:
-  onSubmit?: () => void;
-  code: string;
-  onCodeChange: (code: string) => void;
-  loading?: boolean;
-  output?: string;
-}
+export const TaskEditor: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
-export const TaskEditor: React.FC<TaskEditorProps> = ({
-  onSubmit,
-  code,
-  onCodeChange,
-  loading = false,
-  output = "",
-}) => {
+  // Stany aplikacji
+  const [task, setTask] = useState<any>(null);
+  const [code, setCode] = useState<string>("");
+  const [output, setOutput] = useState<string>("Czekam na uruchomienie protokołu...");
+  const [loadingSubmit, setLoadingSubmit] = useState<boolean>(false);
+  const [fetchingTask, setFetchingTask] = useState<boolean>(true);
+
+  // 1. Pobieranie zadania z API
+  useEffect(() => {
+    fetch(`http://localhost:8000/api/tasks/${id}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Nie znaleziono misji!");
+        return res.json();
+      })
+      .then((data) => {
+        setTask(data);
+        setCode(data.initial_code || "// Rozpocznij kodowanie...");
+        setFetchingTask(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setFetchingTask(false);
+      });
+  }, [id]);
+
+  // 2. Wysyłanie kodu do sędziego
+  const handleSubmit = async () => {
+    setLoadingSubmit(true);
+    setOutput("[SYSTEM] Nawiązywanie połączenia z sędzią Judge0...");
+    try {
+      const response = await fetch(`http://localhost:8000/api/tasks/${id}/submit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: code }),
+      });
+
+      const data = await response.json();
+
+      if (data.status === "Accepted") {
+        setOutput(`[SYSTEM] STATUS: ACCEPTED\n\nWynik operacji:\n${data.stdout}`);
+      } else {
+        setOutput(`[SYSTEM] STATUS: ERROR (${data.status})\n\nLogi systemowe:\n${data.compile_output || data.stderr || "Błąd krytyczny"}`);
+      }
+    } catch (err) {
+      setOutput("[SYSTEM] BŁĄD: Brak połączenia z rdzeniem sędziego.");
+    }
+    setLoadingSubmit(false);
+  };
+
+  if (fetchingTask) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-background text-primary">
+        <div className="animate-pulse tracking-widest uppercase font-black">Inicjalizacja Misji...</div>
+      </div>
+    );
+  }
+
+  if (!task) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen text-destructive">
+        <h2 className="text-2xl font-bold">BŁĄD: Misja nie istnieje!</h2>
+        <Button onClick={() => navigate("/")} variant="link">Powrót do bazy</Button>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-background to-muted/60 py-10 px-2">
-      <div className="w-full max-w-2xl bg-card border border-border rounded-2xl shadow-xl p-8 flex flex-col gap-6">
-        <h2 className="text-2xl font-bold text-primary mb-2 tracking-tight">Edytor Zadania</h2>
-        <textarea
-          className="w-full h-64 p-4 rounded-xl bg-muted text-base text-foreground border border-input focus:outline-none focus:ring-2 focus:ring-primary/60 transition-all shadow-inner resize-y font-mono"
-          value={code}
-          onChange={e => onCodeChange(e.target.value)}
-          placeholder="Wpisz swój kod tutaj..."
-        />
-        <Button onClick={onSubmit} disabled={loading} className="w-full mt-2 text-base py-3" variant={loading ? 'secondary' : 'default'}>
-          {loading ? (
-            <span className="flex items-center gap-2"><span className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary" /> Kompilacja w toku...</span>
-          ) : (
-            <span>URUCHOM PROTOKÓŁ</span>
-          )}
-        </Button>
-        <div className="bg-black/90 p-5 rounded-xl border border-border mt-2 min-h-[60px] shadow-inner">
-          <h4 className="text-gray-400 mb-2 text-sm font-semibold">Terminal Odbiorczy:</h4>
-          <pre className="text-green-400 font-mono whitespace-pre-wrap m-0 text-sm">{output}</pre>
+    <div className="flex flex-col h-[calc(100vh-65px)] bg-background">
+      <div className="flex flex-1 overflow-hidden p-4 gap-4">
+        
+        {/* LEWA STRONA: Opis zadania */}
+        <div className="w-1/3 flex flex-col bg-card border border-border rounded-xl shadow-2xl overflow-hidden">
+          <div className="bg-muted/30 px-4 py-3 border-b border-border flex items-center gap-2 text-primary font-bold uppercase tracking-tighter">
+            <BookOpen size={18} />
+            <span>Dokumentacja Misji</span>
+          </div>
+          <div className="flex-1 overflow-y-auto p-6 prose prose-invert max-w-none">
+            <h1 className="text-xl text-foreground mb-4">{task.title}</h1>
+            <div className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
+              {task.content}
+            </div>
+          </div>
+        </div>
+
+        {/* PRAWA STRONA: Edytor i Terminal */}
+        <div className="flex-1 flex flex-col gap-4">
+          
+          {/* Edytor Monaco */}
+          <div className="flex-[2] bg-card border border-border rounded-xl overflow-hidden flex flex-col shadow-2xl">
+            <div className="bg-muted/30 px-4 py-2 border-b border-border flex justify-between items-center text-xs font-mono">
+              <div className="flex items-center gap-2">
+                <Code2 size={14} className="text-primary" />
+                <span className="text-muted-foreground uppercase">src/solution.cpp</span>
+              </div>
+              <span className="text-primary/70">{task.language || "C++ 17"}</span>
+            </div>
+            <div className="flex-1">
+              <Editor
+                height="100%"
+                defaultLanguage={task.language || "cpp"}
+                theme="vs-dark"
+                value={code}
+                onChange={(v) => setCode(v || "")}
+                options={{
+                  fontSize: 14,
+                  minimap: { enabled: false },
+                  scrollBeyondLastLine: false,
+                  padding: { top: 10 },
+                  fontFamily: "var(--font-mono)",
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Terminal */}
+          <div className="flex-1 bg-black border border-border rounded-xl overflow-hidden flex flex-col shadow-2xl">
+            <div className="bg-muted/10 px-4 py-2 border-b border-border flex items-center gap-2 text-xs font-bold uppercase text-muted-foreground">
+              <Terminal size={14} />
+              <span>Logi Terminala</span>
+            </div>
+            <pre className="flex-1 p-4 font-mono text-sm text-green-500 overflow-y-auto whitespace-pre-wrap selection:bg-green-500/20">
+              {output}
+            </pre>
+            <div className="p-3 bg-muted/5 border-t border-border">
+              <Button 
+                onClick={handleSubmit} 
+                disabled={loadingSubmit}
+                className="w-full font-black tracking-widest uppercase py-6 text-lg transition-all"
+              >
+                {loadingSubmit ? "Przetwarzanie..." : "Uruchom Protokół"}
+              </Button>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
   );
 };
+
+export default TaskEditor;

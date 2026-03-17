@@ -1,48 +1,29 @@
 {
-  // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
-        "baseUrl": ".",
-        "paths": {
-          "@/*": ["./src/*"]
-        },
-    // File Layout
-    // "rootDir": "./src",
-    // "outDir": "./dist",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
 
-    // Environment Settings
-    // See also https://aka.ms/tsconfig/module
-    "module": "nodenext",
+    // ZMIENIONE: Zamiast nodenext używamy standardu dla bundlerów (Vite)
+    "module": "ESNext", 
+    "moduleResolution": "bundler", 
+    
+    // DODANE: Żeby TS pozwolił na importowanie plików .ts/.tsx bez rozszerzeń
+    "allowImportingTsExtensions": false, 
+    "noEmit": true, // Vite zajmuje się budowaniem, nie TS
+
     "target": "esnext",
-    "types": [],
-    // For nodejs:
-    // "lib": ["esnext"],
-    // "types": ["node"],
-    // and npm install -D @types/node
-
-    // Other Outputs
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
-
-    // Stricter Typechecking Options
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-
-    // Style Options
-    // "noImplicitReturns": true,
-    // "noImplicitOverride": true,
-    // "noUnusedLocals": true,
-    // "noUnusedParameters": true,
-    // "noFallthroughCasesInSwitch": true,
-    // "noPropertyAccessFromIndexSignature": true,
-
-    // Recommended Options
-    "strict": true,
     "jsx": "react-jsx",
-    "verbatimModuleSyntax": true,
-    "isolatedModules": true,
-    "noUncheckedSideEffectImports": true,
-    "moduleDetection": "force",
+    
+    // POZOSTAŁE OPCJE (zostaw jak masz lub dostosuj)
+    "strict": true,
+    "sourceMap": true,
     "skipLibCheck": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    
+    // To ustawienie często koliduje z Reactem, możesz je wyłączyć jeśli importy dalej wywalają błędy:
+    "verbatimModuleSyntax": false 
   }
 }

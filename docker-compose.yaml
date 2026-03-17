@@ -5,6 +5,11 @@
   app-db:
     image: postgres:15-alpine
     container_name: app_postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d AppDb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     ports:
       - "5432:5432"
     environment:
@@ -106,8 +111,10 @@
       - DATABASE_URL=postgresql://admin:admin@app-db:5432/AppDb
       - JUDGE0_URL=http://judge0-server:2358
     depends_on:
-      - app-db
-      - judge0-server
+      app-db:
+        condition: service_healthy
+      judge0-server:
+        condition: service_started
     networks:
       - app-network
 

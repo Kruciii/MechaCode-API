@@ -8,7 +8,6 @@ import models
 app = FastAPI()
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
 # To polecenie automatycznie stworzy puste tabele w bazie przy starcie, jeśli ich nie ma!
 models.Base.metadata.create_all(bind=engine)
 # Konfiguracja CORS
@@ -79,3 +78,42 @@ def get_task_details(task_id: int, db: Session = Depends(get_db)):
     if not task:
         raise HTTPException(status_code=404, detail="Zadanie nie istnieje w bazie.")
     return task
+
+@app.post("/api/seed")
+def seed_database(db: Session = Depends(get_db)):
+    # Sprawdzamy, czy tabela tasks jest pusta
+    if db.query(models.Task).count() == 0:
+        task1 = models.Task(
+            title="Protokół Alfa",
+            short_content="Napisz program wypisujący 'Hello Mecha'.",
+            content="Witaj inżynierze. Twoim pierwszym zadaniem jest inicjalizacja rdzenia komunikacyjnego.\n\nNapisz program w języku C++, który wypisze na standardowe wyjście dokładnie ten tekst:\n\nHello Mecha\n\nPamiętaj o zwróceniu 0 na końcu funkcji main!",
+            initial_code="#include <iostream>\n\nint main() {\n    // Pisz kod tutaj\n    \n    return 0;\n}",
+            status="NOT_STARTED",
+            semester="Semestr 1",
+            language="cpp",
+            language_id=54, # ID 54 to C++ w systemie Judge0
+            difficulty="EASY",
+            topic="Podstawy"
+        )
+        
+        task2 = models.Task(
+            title="Kalkulator Spalania",
+            short_content="Oblicz zużycie paliwa reaktora.",
+            content="Reaktor plazmowy traci stabilność. Musisz napisać algorytm, który obliczy optymalne zużycie paliwa.\n\nZadanie: Napisz program, który przyjmuje ilość cykli i oblicza całkowite zapotrzebowanie energetyczne.",
+            initial_code="#include <iostream>\n\nint main() {\n    // Moduł kalkulacji paliwa\n    \n    return 0;\n}",
+            status="NOT_STARTED",
+            semester="Semestr 1",
+            language="cpp",
+            language_id=54,
+            difficulty="MEDIUM",
+            topic="Algorytmy"
+        )
+        
+        # Wrzucamy dane do bazy i zapisujemy (commit)
+        db.add(task1)
+        db.add(task2)
+        db.commit()
+        
+        return {"message": "Baza została zasilona danymi testowymi! 🚀"}
+        
+    return {"message": "Baza ma już dane, nie dodaję duplikatów."}
