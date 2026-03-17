@@ -33,3 +33,12 @@ docker/db_data/
 app_postgres_data/
 judge0_postgres_data/
 judge0_redis_data/
+# --- Globalne/Dodatkowe ---
+node_modules/
+.vite/
+.eslintcache
+*.log
+
+# --- Pozostałości po buildach ---
+dist/
+build/
