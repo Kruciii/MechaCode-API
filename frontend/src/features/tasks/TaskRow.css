@@ -1,0 +1,78 @@
+/* TaskRow.css */
+
+.task-row-container {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem; /* gap-6 */
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 40px;
+  transition: all 0.3s ease;
+}
+
+.task-row-container:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Pastylka z Tytułem */
+.task-badge-main {
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-weight: bold;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  font-size: 1.125rem;
+  min-width: 180px;
+  text-align: center;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Pastylka z Opisem */
+.task-description-pill {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  flex-grow: 1;
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Kontener na Tagi */
+.task-tags-container {
+  display: flex;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.task-tag {
+  background-color: rgba(99, 102, 241, 0.1); /* indigo-500/10 */
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  color: #a5b4fc; /* indigo-300 */
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-family: monospace;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+/* Styl dla przycisku START (jeśli nie używasz gotowych klas w Button.tsx) */
+.task-start-button {
+  border-radius: 9999px !important;
+  padding: 1.5rem 2rem !important;
+  background-color: #4f46e5 !important;
+  font-weight: bold !important;
+  box-shadow: 0 0 20px rgba(79, 70, 229, 0.4);
+  transition: transform 0.2s ease;
+}
+
+.task-start-button:active {
+  transform: scale(0.95);
+}
