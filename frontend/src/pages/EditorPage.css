@@ -1,64 +1,146 @@
-/* EditorPage.css */
-
-.editor-page-container {
-  display: grid;
-  grid-template-columns: 400px 1fr; /* Lewa kolumna stała, prawa zajmuje resztę */
-  grid-template-rows: 1fr 250px;    /* Edytor na górze, terminal na dole */
+.editor-page-wrapper {
+  display: flex;
   height: 100vh;
-  background: #0f172a; /* Ciemne tło jak w dashboardzie */
-  color: white;
+  width: 100vw;
+  background-color: #020617;
   overflow: hidden;
 }
 
-/* LEWY PANEL: Treść zadania */
-.task-sidebar {
-  grid-row: 1 / span 2; /* Sidebar zajmuje całą wysokość od góry do dołu */
-  background: rgba(255, 255, 255, 0.03);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
+/* SIDEBAR */
+.task-info-sidebar {
+  width: 380px;
+  min-width: 380px;
+  background: rgba(255, 255, 255, 0.02);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
   padding: 2rem;
-  overflow-y: auto;
-  backdrop-filter: blur(10px);
-}
-
-.task-sidebar h2 {
-  color: #818cf8;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-/* PRAWY PANEL: Edytor Monaco */
-.editor-section {
-  grid-column: 2;
-  grid-row: 1;
-  background: #1e1e1e; /* Kolor tła Monaco (VS Code Dark) */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  position: relative;
-}
-
-/* DOLNY PANEL: Terminal / Wyniki Judge'a */
-.terminal-section {
-  grid-column: 2;
-  grid-row: 2;
-  background: #020617;
-  padding: 1.5rem;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.9rem;
-  overflow-y: auto;
-}
-
-.terminal-header {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-  color: #64748b;
-  font-size: 0.8rem;
+  flex-direction: column;
+}
+
+.back-btn-styled {
+  color: #818cf8 !important;
+  font-size: 11px !important;
+  font-weight: bold !important;
+  letter-spacing: 1px;
+  margin-bottom: 2rem !important;
+  padding: 0 !important;
+}
+
+.task-pill-header {
+  background: rgba(99, 102, 241, 0.05);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  border-radius: 20px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.task-instance-id {
+  font-family: monospace;
+  font-size: 10px;
+  color: #6366f1;
+  letter-spacing: 2px;
+}
+
+.task-pill-header h1 {
+  font-size: 1.5rem;
+  font-weight: 900;
+  margin: 8px 0 15px 0;
+  color: white;
+}
+
+.task-meta-tags {
+  display: flex;
+  gap: 8px;
+}
+
+.tag-mini {
+  font-size: 9px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 4px 12px;
+  border-radius: 50px;
+  color: rgba(255, 255, 255, 0.6);
   text-transform: uppercase;
 }
 
-/* Przycisk kompilacji w edytorze */
-.run-button-container {
-  position: absolute;
-  top: 1rem;
-  right: 2rem;
-  z-index: 10;
+/* EDYTOR I TERMINAL */
+.editor-main-section {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-toolbar {
+  height: 50px;
+  background: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #10b981;
+  animation: pulse 2s infinite;
+}
+
+.file-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: monospace;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.run-btn-neon {
+  background: #10b981 !important;
+  color: white !important;
+  font-weight: bold !important;
+  border-radius: 50px !important;
+  height: 32px !important;
+  font-size: 11px !important;
+  padding: 0 20px !important;
+}
+
+.monaco-frame {
+  flex-grow: 1;
+  background: #1e1e1e;
+  position: relative;
+}
+
+.terminal-footer {
+  height: 220px;
+  background: #000;
+  padding: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.terminal-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  text-transform: uppercase;
+  color: #475569;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.terminal-text {
+  color: #10b981;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  margin: 0;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); opacity: 0.7; }
+  70% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.7; }
 }
