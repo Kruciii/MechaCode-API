@@ -1,0 +1,64 @@
+/* EditorPage.css */
+
+.editor-page-container {
+  display: grid;
+  grid-template-columns: 400px 1fr; /* Lewa kolumna stała, prawa zajmuje resztę */
+  grid-template-rows: 1fr 250px;    /* Edytor na górze, terminal na dole */
+  height: 100vh;
+  background: #0f172a; /* Ciemne tło jak w dashboardzie */
+  color: white;
+  overflow: hidden;
+}
+
+/* LEWY PANEL: Treść zadania */
+.task-sidebar {
+  grid-row: 1 / span 2; /* Sidebar zajmuje całą wysokość od góry do dołu */
+  background: rgba(255, 255, 255, 0.03);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2rem;
+  overflow-y: auto;
+  backdrop-filter: blur(10px);
+}
+
+.task-sidebar h2 {
+  color: #818cf8;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* PRAWY PANEL: Edytor Monaco */
+.editor-section {
+  grid-column: 2;
+  grid-row: 1;
+  background: #1e1e1e; /* Kolor tła Monaco (VS Code Dark) */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+/* DOLNY PANEL: Terminal / Wyniki Judge'a */
+.terminal-section {
+  grid-column: 2;
+  grid-row: 2;
+  background: #020617;
+  padding: 1.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  overflow-y: auto;
+}
+
+.terminal-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  color: #64748b;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+/* Przycisk kompilacji w edytorze */
+.run-button-container {
+  position: absolute;
+  top: 1rem;
+  right: 2rem;
+  z-index: 10;
+}

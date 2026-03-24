@@ -1,13 +1,16 @@
-import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import DashboardPage from './pages/DashboardPage.tsx';
+import EditorPage from './pages/EditorPage.tsx';
 
-const App: React.FC = () => {
+function App() {
   return (
-    // Używamy standardowych kolorów: slate-900 do violet-950
-    <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 text-white">
-      <DashboardPage />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<DashboardPage />} />
+        <Route path="/editor/:taskId" element={<EditorPage />} />
+      </Routes>
+    </Router>
   );
-};
+}
 
 export default App;

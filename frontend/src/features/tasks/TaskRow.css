@@ -76,3 +76,57 @@
 .task-start-button:active {
   transform: scale(0.95);
 }
+
+/* --- Styl dla Dymka (Tooltip) --- */
+
+/* 1. Sprawiamy, że wiersz zadania jest punktem odniesienia */
+.task-row-container {
+  position: relative; /* <--- To jest kluczowe! */
+}
+
+/* 2. Stylowanie ukrytego dymka */
+.task-tooltip-dymek {
+  position: absolute;
+  top: -10px; /* Lekko powyżej wiersza */
+  left: 100px; /* Lekko w prawo od kropki statusu */
+  transform: translateY(-100%); /* Przesuwa go w całości do góry */
+  
+  /* Wygląd - Ciemny, szklany dymek */
+  background-color: rgba(15, 23, 42, 0.95); /* Ciemny granat z radial-gradient */
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  width: 350px; /* Stała szerokość dymka */
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.5);
+  z-index: 100; /* Upewnia się, że jest na wierzchu */
+  
+  /* Ukrycie na starcie + płynne pojawianie */
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  pointer-events: none; /* Żeby nie łapał myszki jak jest ukryty */
+}
+
+/* 3. Stylowanie tekstu wewnątrz dymka */
+.task-tooltip-dymek .tooltip-title {
+  color: #818cf8; /* indigo-400 */
+  font-family: monospace;
+  font-size: 0.75rem;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.task-tooltip-dymek .tooltip-description {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* --- KLUCOWE: Pokazywanie po najechaniu --- */
+.task-row-container:hover .task-tooltip-dymek {
+  opacity: 1;
+  visibility: visible;
+  top: 0; /* Delikatny ruch w dół przy pojawianiu */
+}
