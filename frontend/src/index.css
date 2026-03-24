@@ -13,7 +13,7 @@
     min-height: 100vh;
     width: 100%;
     /* Twój gradient */
-    background: radial-gradient(circle at top left, #5c56b5 0%, #0f172a 100%);
+    background: radial-gradient(circle at top left, #320081 0%,  #000620 100%);
     color: white;
   }
   

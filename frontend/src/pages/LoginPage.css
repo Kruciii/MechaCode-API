@@ -1,0 +1,165 @@
+/* RESET I WRAPPER */
+.login-page-wrapper {
+  height: 100vh;
+  width: 100vw;
+  background: #020617;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  font-family: 'Inter', sans-serif;
+}
+
+/* KOLOROWE PLAMY W TLE (BLOBS) */
+.blob {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  filter: blur(100px);
+  z-index: 0;
+  opacity: 0.15;
+}
+.blob-purple { background: #6366f1; top: -100px; left: -100px; }
+.blob-green { background: #10b981; bottom: -100px; right: 0; }
+.blob-blue { background: #3b82f6; top: 40%; left: 60%; }
+
+/* KONTENER Z ANIMACJĄ LEWITACJI */
+.login-container {
+  z-index: 10;
+  animation: floating 6s ease-in-out infinite;
+}
+
+@keyframes floating {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+/* SZKLANA KARTA */
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 40px;
+  padding: 60px;
+  width: 450px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+/* MECHACODE DESIGN */
+.logo-main {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: white;
+  margin-bottom: 5px;
+  letter-spacing: -2px;
+}
+.logo-main span { color: #6366f1; }
+
+.status-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+.status-text {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: #10b981;
+}
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  background: #10b981;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #10b981;
+  animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.login-subtitle {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-bottom: 40px;
+}
+
+/* USOS DESIGN (SZEROKIE LITERY) */
+.logo-usos {
+  font-size: 4rem;
+  font-weight: 200;
+  color: white;
+  letter-spacing: 25px; /* Tak jak na Twoim rysunku! */
+  margin-left: 25px; /* Kompensacja letter-spacing */
+  margin-bottom: 40px;
+}
+
+.usos-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: white;
+  text-align: center;
+  font-family: monospace;
+  outline: none;
+  transition: 0.3s;
+}
+.input-group input:focus {
+  border-color: #6366f1;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* PRZYCISKI */
+.btn-auth, .btn-usos {
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 900;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-auth {
+  background: white;
+  color: black;
+}
+.btn-auth:hover {
+  transform: scale(1.02);
+  background: #f1f5f9;
+}
+
+.btn-usos {
+  background: #1e293b;
+  color: white;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.btn-usos:hover {
+  background: #334155;
+}
+
+.back-link {
+  background: none;
+  border: none;
+  color: #475569;
+  margin-top: 30px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  letter-spacing: 2px;
+}
+.back-link:hover { color: white; }
