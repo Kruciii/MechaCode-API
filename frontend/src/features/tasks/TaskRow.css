@@ -1,0 +1,132 @@
+/* TaskRow.css */
+
+.task-row-container {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem; /* gap-6 */
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 40px;
+  transition: all 0.3s ease;
+}
+
+.task-row-container:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Pastylka z Tytułem */
+.task-badge-main {
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-weight: bold;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  font-size: 1.125rem;
+  min-width: 180px;
+  text-align: center;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Pastylka z Opisem */
+.task-description-pill {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  flex-grow: 1;
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Kontener na Tagi */
+.task-tags-container {
+  display: flex;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.task-tag {
+  background-color: rgba(99, 102, 241, 0.1); /* indigo-500/10 */
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  color: #a5b4fc; /* indigo-300 */
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-family: monospace;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+/* Styl dla przycisku START (jeśli nie używasz gotowych klas w Button.tsx) */
+.task-start-button {
+  border-radius: 9999px !important;
+  padding: 1.5rem 2rem !important;
+  background-color: #4f46e5 !important;
+  font-weight: bold !important;
+  box-shadow: 0 0 20px rgba(79, 70, 229, 0.4);
+  transition: transform 0.2s ease;
+}
+
+.task-start-button:active {
+  transform: scale(0.95);
+}
+
+/* --- Styl dla Dymka (Tooltip) --- */
+
+/* 1. Sprawiamy, że wiersz zadania jest punktem odniesienia */
+.task-row-container {
+  position: relative; /* <--- To jest kluczowe! */
+}
+
+/* 2. Stylowanie ukrytego dymka */
+.task-tooltip-dymek {
+  position: absolute;
+  top: -10px; /* Lekko powyżej wiersza */
+  left: 100px; /* Lekko w prawo od kropki statusu */
+  transform: translateY(-100%); /* Przesuwa go w całości do góry */
+  
+  /* Wygląd - Ciemny, szklany dymek */
+  background-color: rgba(15, 23, 42, 0.95); /* Ciemny granat z radial-gradient */
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  width: 350px; /* Stała szerokość dymka */
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.5);
+  z-index: 100; /* Upewnia się, że jest na wierzchu */
+  
+  /* Ukrycie na starcie + płynne pojawianie */
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  pointer-events: none; /* Żeby nie łapał myszki jak jest ukryty */
+}
+
+/* 3. Stylowanie tekstu wewnątrz dymka */
+.task-tooltip-dymek .tooltip-title {
+  color: #818cf8; /* indigo-400 */
+  font-family: monospace;
+  font-size: 0.75rem;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.task-tooltip-dymek .tooltip-description {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* --- KLUCOWE: Pokazywanie po najechaniu --- */
+.task-row-container:hover .task-tooltip-dymek {
+  opacity: 1;
+  visibility: visible;
+  top: 0; /* Delikatny ruch w dół przy pojawianiu */
+}

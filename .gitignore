@@ -10,6 +10,7 @@ frontend/.env.development.local
 frontend/.env.test.local
 frontend/.env.production.local
 frontend/npm-debug.log*
+frontend/node_modules/.vite
 
 # --- Backend (Python/FastAPI) ---
 backend/__pycache__/
@@ -20,11 +21,14 @@ backend/venv/
 backend/env/
 backend/.env
 backend/.pytest_cache/
+.python-version
 
 # --- Docker & DB ---
 .docker/
 # To zablokuje wysyłanie lokalnych plików bazy danych, jeśli trzymasz je w folderze projektu
 docker/db_data/ 
+*.log
+docker-compose.override.yml
 
 # --- VS Code ---
 .vscode/
