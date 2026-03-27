@@ -5,6 +5,7 @@ interface StatusDotProps {
   status: TaskStatus;
 }
 
+
 const StatusDot: React.FC<StatusDotProps> = ({ status }) => {
   // Mapowanie statusu na konkretne klasy kolorów z Twojego projektu
   const statusConfig = {

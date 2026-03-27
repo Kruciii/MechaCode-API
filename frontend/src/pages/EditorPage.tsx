@@ -2,45 +2,18 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {Editor} from '@monaco-editor/react';
 import './EditorPage.css';
-
-// 1. DEFINIUJEMY TYP ZADANIA (To naprawia podkreślenia!)
-interface Task {
-  id: string;
-  title: string;
-  description: string;
-  defaultCode: string;
-}
-
-// 2. DANE ZADAŃ (Upewnij się, że ID pasują do tych z Dashboardu)
-const tasksData: Task[] = [
-  { 
-    id: '001', 
-    title: 'Konto Bankowe', 
-    description: 'Zaimplementuj system zarządzania funduszami. Skonstruuj klasę z prywatnym saldem, metodami bezpiecznych wpłat oraz walidacją wypłat.',
-    defaultCode: '#include <iostream>\n\nusing namespace std;\n\nclass Konto {\nprivate:\n    double saldo = 0;\npublic:\n    void wplac(double kwota) { /* ... */ }\n};\n\nint main() {\n    cout << "System bankowy gotowy." << endl;\n    return 0;\n}'
-  },
-  { 
-    id: '002', 
-    title: 'System Rezerwacji', 
-    description: 'Zbuduj moduł rezerwacji miejsc w kinie. Wykorzystaj kontenery Vector do mapowania sali i zaimplementuj zapis stanu do plików.',
-    defaultCode: '#include <iostream>\n#include <vector>\n\nint main() {\n    // Rezerwacja miejsc\n    return 0;\n}'
-  },
-  { 
-    id: '003', 
-    title: 'Silnik Fizyczny', 
-    description: 'Stwórz jądro obliczeniowe dla symulacji kolizji. Oblicz wektory odbicia przy użyciu zaawansowanych przeciążeń operatorów.',
-    defaultCode: '#include <iostream>\n\nint main() {\n    // Fizyka kolizji\n    return 0;\n}'
-  }
-];
+import TaskSidebar from '@/features/tasks/TaskSidebar.tsx';
+import { tasksData } from '@/features/tasks/TaskData.tsx';
 
 const EditorPage: React.FC = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Stan zwijania
   // Wyciągamy taskId z URL i mówimy TS, że to string
   const { taskId } = useParams<{ taskId: string }>();
   const navigate = useNavigate();
   const [terminalOutput, setTerminalOutput] = useState<string[]>(['> MechaOS v2.0.4 initialized...', '> System ready for compilation.']);
 
   // Szukamy zadania
-  const currentTask = tasksData.find(t => t.id === taskId);
+ const currentTask = tasksData.find(t => t.id === taskId) || tasksData[0];
 
   const handleRunCode = () => {
     setTerminalOutput(prev => [
@@ -61,18 +34,31 @@ const EditorPage: React.FC = () => {
     );
   }
 
+  
   return (
-    <div className="editor-wrapper">
+    <div className={`editor-wrapper ${!isSidebarOpen ? 'sidebar-closed' : ''}`}>
       <header className="editor-header">
         <div className="header-left">
-          <button className="back-btn" onClick={() => navigate('/')}>← DASHBOARD</button>
+          {/* TU JEST MIEJSCE NA PRZYCISK */}
+          <button 
+            className={`sidebar-toggle ${isSidebarOpen ? 'active' : ''}`} 
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          >
+            <div className="bar"></div>
+            <div className="bar"></div>
+            <div className="bar"></div>
+          </button>
+          
+          <button className="back-btn" onClick={() => navigate('/dashboard')}>←</button>
           <div className="v-line"></div>
-          <span className="task-name-nav">MODULE: {currentTask.title}</span>
+          <span className="task-name-nav">MODULE: {currentTask?.title}</span>
         </div>
         <button className="run-btn" onClick={handleRunCode}>RUN COMPILER</button>
       </header>
 
       <div className="editor-main">
+        {/* SIDEBAR - Znika gdy isSidebarOpen jest false */}
+      {isSidebarOpen && <TaskSidebar tasks={tasksData} activeId={taskId} />}
         {/* LEWY PANEL: TREŚĆ */}
         <aside className="editor-sidebar">
           <div className="sidebar-label">DOKUMENTACJA</div>
@@ -91,6 +77,7 @@ const EditorPage: React.FC = () => {
         <div className="code-section">
           <div className="monaco-container">
             <Editor
+              key={currentTask.id}
               height="100%"
               defaultLanguage="cpp"
               theme="vs-dark"
