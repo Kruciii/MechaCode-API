@@ -27,7 +27,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: monospace;
+  font-family: monospace, sans-serif;
 }
 
 .logo-section { display: flex; align-items: center; gap: 20px; }
@@ -94,6 +94,7 @@
   line-height: 1.6;
   padding: 15px 0; /* Odstęp góra-dół */
   border-top: 1px solid rgba(255, 255, 255, 0.05);
+  font-family: monospace, sans-serif;
 }
 
 /* AKTYWACJA HOVER */
@@ -121,7 +122,7 @@
 /* 6. DETALE WEWNĄTRZ */
 .card-header { display: flex; justify-content: space-between; margin-bottom: 15px; }
 .task-id { font-family: monospace; color: #475569; font-size: 11px; }
-.task-title { font-size: 1.3rem; margin: 10px 0; color: white; }
+.task-title { font-size: 1.3rem; margin: 10px 0; color: white; font-family: monospace, sans-serif; }
 
 .tags-container { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
 .tag-pill {
@@ -131,6 +132,7 @@
   border-radius: 6px;
   font-size: 10px;
   font-weight: bold;
+  font-family: monospace, sans-serif;
 }
 
 .card-footer {
@@ -145,7 +147,7 @@
 .diff-text { font-size: 10px; color: #64748b; text-transform: uppercase; }
 
 /* KROPKI TRUDNOŚCI */
-.diff-dot { width: 8px; height: 8px; border-radius: 50%; }
-.diff-dot.medium { background: #fbbf24; box-shadow: 0 0 10px #fbbf24; }
-.diff-dot.hard { background: #f87171; box-shadow: 0 0 10px #f87171; }
-.diff-dot.expert { background: #c084fc; box-shadow: 0 0 10px #c084fc; }
+.diff-dot { width: 16px; height: 16px; border-radius: 50%; }
+.diff-dot.easy { background: #fbbf24; box-shadow: 0 0 10px #fbbf24; }
+.diff-dot.medium { background: #f87171; box-shadow: 0 0 10px #f87171; }
+.diff-dot.hard { background: #84fca8; box-shadow: 0 0 10px #84fca8; }

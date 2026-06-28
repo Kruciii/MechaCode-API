@@ -61,8 +61,7 @@ const Dashboard: React.FC = () => {
           </div>
           <div className="header-actions">
             <div className="status-badge">
-              <span className="dot-online"></span>
-              SYSTEM ONLINE
+
             </div>
             <button className="btn-logout" onClick={() => navigate('/login')}>WYLOGUJ</button>
           </div>
