@@ -1,0 +1,151 @@
+/* 1. RESET I BAZA */
+.dashboard-wrapper {
+  min-height: 100vh;
+  width: 100vw;
+  background: #020617; /* Głęboki granat/czerń */
+  color: white;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* 2. NAGŁÓWEK */
+.dash-header {
+  width: 100%;
+  background: rgba(15, 23, 42, 0.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: monospace;
+}
+
+.logo-section { display: flex; align-items: center; gap: 20px; }
+.logo-mini { font-size: 1.6rem; font-weight: 900; }
+.logo-mini span { color: #6366f1; }
+.divider-v { width: 1px; height: 20px; background: rgba(255, 255, 255, 0.2); }
+.course-title { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: #64748b; }
+
+/* 3. GRID KAFELKÓW */
+.dash-container {
+  max-width: 1400px;
+  margin: 40px auto;
+  padding: 0 40px;
+}
+
+.tasks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+}
+
+/* 4. KAFELEK (TASK CARD) */
+.task-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 25px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  min-height: 200px;
+}
+
+.task-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+  transform: translateY(-8px);
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* 5. ROZWIJANA SEKCJA (GRID TRICK) */
+.task-expandable-section {
+  display: grid;
+  grid-template-rows: 0fr; /* To jest klucz do animacji height: auto */
+  transition: grid-template-rows 0.4s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+/* KONTENER ANIMACJI */
+.task-expand-wrapper {
+  display: block;
+  max-height: 0; /* Całkowicie schowane */
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0, 1, 0, 1), opacity 0.3s ease;
+  pointer-events: none; /* Nie przeszkadza w klikaniu gdy schowane */
+}
+
+/* TREŚĆ WEWNĄTRZ */
+.task-description-content {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  line-height: 1.6;
+  padding: 15px 0; /* Odstęp góra-dół */
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* AKTYWACJA HOVER */
+.task-card:hover .task-expand-wrapper {
+  max-height: 200px; /* Dowolna wartość większa niż tekst */
+  opacity: 1;
+  transition: max-height 0.5s cubic-bezier(1, 0, 1, 0), opacity 0.5s ease;
+}
+
+/* DOPASOWANIE KARTY */
+.task-card {
+  /* ... reszta Twoich stylów karty ... */
+  display: flex;
+  flex-direction: column;
+  min-height: 180px; /* Ważne, żeby karta miała bazowy rozmiar */
+}
+
+.task-description {
+  overflow: hidden; /* Ważne dla grid-template-rows */
+  font-size: 0.85rem;
+  color: #94a3b8;
+  line-height: 1.6;
+}
+
+/* 6. DETALE WEWNĄTRZ */
+.card-header { display: flex; justify-content: space-between; margin-bottom: 15px; }
+.task-id { font-family: monospace; color: #475569; font-size: 11px; }
+.task-title { font-size: 1.3rem; margin: 10px 0; color: white; }
+
+.tags-container { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+.tag-pill {
+  background: rgba(99, 102, 241, 0.1);
+  color: #818cf8;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.card-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  font-family: monospace;
+}
+
+.diff-text { font-size: 10px; color: #64748b; text-transform: uppercase; }
+
+/* KROPKI TRUDNOŚCI */
+.diff-dot { width: 8px; height: 8px; border-radius: 50%; }
+.diff-dot.medium { background: #fbbf24; box-shadow: 0 0 10px #fbbf24; }
+.diff-dot.hard { background: #f87171; box-shadow: 0 0 10px #f87171; }
+.diff-dot.expert { background: #c084fc; box-shadow: 0 0 10px #c084fc; }

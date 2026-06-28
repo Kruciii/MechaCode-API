@@ -1,37 +1,25 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import TaskList from './TaskList.js';
-import TaskEditor from './TaskEditor.js';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import LoginPage from './pages/LoginPage.tsx';
+import Dashboard from './pages/DashboardPage.tsx';
+import EditorPage from './pages/EditorPage.tsx';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <Router>
-      <div style={{ 
-        background: '#121212', // Ciemne tło dla całej apki
-        minHeight: '100vh', 
-        width: '100vw',
-        margin: 0,
-        padding: 0
-      }}>
-        <Routes>
-          {/* Strona główna: Lista wszystkich zadań (Strona 3) */}
-          <Route path="/" element={<TaskList />} />
-
-          {/* Strona zadania: Edytor z instrukcją (Strona 4) */}
-          {/* Parametr :id pozwala TaskEditorowi wiedzieć, które zadanie pobrać z bazy */}
-          <Route path="/task/:id" element={<TaskEditor />} />
-          
-          {/* Opcjonalnie: Obsługa nieistniejących stron */}
-          <Route path="*" element={
-            <div style={{ color: 'white', padding: '20px' }}>
-              <h2>404 - System MechaCode nie odnalazł tej lokalizacji.</h2>
-              <button onClick={() => window.location.href = '/'}>Wróć do bazy</button>
-            </div>
-          } />
-        </Routes>
-      </div>
-    </Router>
+    <Routes>
+      {/* 1. Startujemy od logowania */}
+      <Route path="/login" element={<LoginPage />} />
+      
+      {/* 2. Główny panel z kafelkami */}
+      <Route path="/dashboard" element={<Dashboard />} />
+      
+      {/* 3. Edytor z dynamicznym ID zadania */}
+      <Route path="/editor/:taskId" element={<EditorPage />} />
+      
+      {/* 4. Automatyczne przekierowanie, jeśli ktoś wejdzie na pusty adres */}
+      <Route path="/" element={<Navigate to="/login" />} />
+    </Routes>
   );
-}
+};
 
 export default App;
